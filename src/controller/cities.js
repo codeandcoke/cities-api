@@ -1,8 +1,8 @@
-const { findAllCities, cityExistsById, cityExistsByName, modifyCity, addCity, removeCity } = require('../service/cities');
+const { findAllCities, cityExistsById, cityExistsByName, modifyCity, addCity, removeCity, findCity } = require('../service/cities');
 
 const getCities = (async (req, res) => {
     // TODO Añadir soporte para filtros
-    const cities = findAllCities();
+    const cities = await findAllCities();
 
     res.status(200).json(cities);
 });
@@ -10,7 +10,7 @@ const getCities = (async (req, res) => {
 const getCity = (async (req, res) => {
     const id = req.params.id;
 
-    if (!cityExistsById(id)) {
+    if (! await cityExistsById(id)) {
         return res.status(404).json({
             code: 404,
             title: 'not-found',
@@ -18,26 +18,28 @@ const getCity = (async (req, res) => {
         });
     }
 
+    const city = await findCity(id);
+
     res.status(200).json(city);
 });
 
 const postCity = (async (req, res) => {
     const name = req.body.name;
 
-    if (cityExistsByName(name)) {
+    if (await cityExistsByName(name)) {
         return res.status(409).json({
             code: 409,
             title: 'conflict',
             message: 'a city already exists with that name'
         });
     }
-
+    
     // TODO Comprobar que altitude y population son de tipo entero
     const altitude = req.body.altitude;
     const population = req.body.population;
     const capital = req.body.capital;
-
-    const newCity = addCity(name, altitude, population, capital);
+    
+    const newCity = await addCity(name, altitude, population, capital);
     // TODO Devolver todos los datos de la ciudad como respuesta
     res.status(201).json(newCity);
 });
@@ -45,7 +47,7 @@ const postCity = (async (req, res) => {
 const putCity = (async (req, res) => {
     const id = req.params.id;
     
-    if (!cityExistsById(id)) {
+    if (!await cityExistsById(id)) {
         return res.status(404).json({
             code: 404,
             title: 'not-found',
@@ -59,7 +61,7 @@ const putCity = (async (req, res) => {
     const population = req.body.population;
     const capital = req.body.capital;
 
-    modifyCity(id, name, altitude, population, capital);
+    await modifyCity(id, name, altitude, population, capital);
 
     res.status(204).end();
 });
@@ -67,14 +69,14 @@ const putCity = (async (req, res) => {
 const deleteCity = (async (req, res) => {
     const id = req.params.id;
     
-    if (!cityExistsById(id)) {
+    if (!await cityExistsById(id)) {
         return res.status(404).json({
             code: 404,
             title: 'not-found',
             message: 'the city does not exist'
         });
     }
-    removeCity(id);
+    await removeCity(id);
     
     res.status(204).end();
 });
