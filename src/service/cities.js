@@ -1,4 +1,4 @@
-const db = require('./configuration/database');
+const db = require('../configuration/database.js').db;
 
 const findAllCities = (async () => {
     return await db('cities').select('*');
@@ -17,11 +17,16 @@ const addCity = (async(name, altitude, population, capital) => {
     });
 });
 
-const modifyCity = (async() => {
-
+const modifyCity = (async(id, name, altitude, population, capital) => {
+    await db('cities').where({id: id}).update({
+        name: name,
+        altitude: altitude,
+        population: population,
+        capital: capital
+    });
 });
 
-const removeCity = (async() => {
+const removeCity = (async(id) => {
     await db('cities').where({id: id}).del();
 });
 
@@ -32,7 +37,11 @@ const cityExistsById = (async(id) => {
 
 const cityExistsByName = (async(name) => {
     const city = await db('cities').select('*').where({name: name}).first();
-    return city != null;
+    if (city === undefined) {
+        return false;
+    } else {
+        return true;
+    }
 });
 
 
