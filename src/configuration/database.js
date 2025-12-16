@@ -1,9 +1,13 @@
 const knex = require('knex');
 
 const db = knex({
-    client: 'sqlite3',
+    client: 'mysql',
     connection: {
-        filename: 'cities.db'
+        host: 'localhost',
+        port: '3306',
+        user: 'user_cities',
+        password: 'password_cities',
+        database: 'cities'
     },
     useNullAsDefault: true
 });
