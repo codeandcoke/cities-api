@@ -1,7 +1,7 @@
 function getDays(fromDate, toDate) {
     const days = toDate.getTime() - fromDate.getTime();
 
-    return Math.abs(Math.round(days / (1000 * 3600 * 24)));
+    return Math.abs(Math.round(days / (1000 * 3600 * 24))) + 1;
 }
 
 function getDaysFromNow(date) {
