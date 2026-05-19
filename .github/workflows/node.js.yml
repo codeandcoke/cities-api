@@ -25,4 +25,9 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: npm test
+    - run: docker compose -f docker-compose.dev.yaml up -d
+    - run: sleep 3
+    - run: npm run start-itest &
+    - run: npm install -g newman
+    - run: newman run cities.postman_collection.json
   
