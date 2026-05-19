@@ -7,7 +7,7 @@
   },
   "item": [
     {
-      "name": "cities",
+      "name": "cities OK",
       "event": [
         {
           "listen": "test",
@@ -29,6 +29,49 @@
         "body": {
           "mode": "raw",
           "raw": "{\n    \"name\": \"Zaragohghza\",\n    \"altitude\": 1000,\n    \"population\": 1000,\n    \"capital\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/cities",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "cities"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "cities bad-request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {\r",
+              "  pm.response.to.have.status(400);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"altitude\": 1000,\n    \"population\": 1000,\n    \"capital\": true\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -92,6 +135,12 @@
             "exec": [
               "pm.test(\"Status code is 200\", function () {\r",
               "  pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test('Response structure is ok', () => {\r",
+              "  pm.expect(pm.response.json()).to.have.property('id');\r",
+              "  pm.expect(pm.response.json()).to.have.property('name');\r",
+              "  pm.expect(pm.response.json()).to.have.property('population');\r",
               "});"
             ],
             "type": "text/javascript",
@@ -113,6 +162,41 @@
           "path": [
             "cities",
             "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "cities/:city 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\r",
+              "  pm.response.to.have.status(404);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/cities/10",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "cities",
+            "10"
           ]
         }
       },
