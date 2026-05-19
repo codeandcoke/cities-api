@@ -2,6 +2,7 @@
     "name": "cities-backend",
     "scripts": {
         "start": "node src/app.js --config config.local.yaml",
+        "start-itest": "node src/app.js --config config.sample.yaml",
         "test": "jest src/test/unit"
     },
     "dependencies": {
